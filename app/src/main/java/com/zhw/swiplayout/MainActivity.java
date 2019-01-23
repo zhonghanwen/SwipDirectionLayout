@@ -4,12 +4,16 @@ import android.app.Activity;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupWindow;
+
+import com.zhw.swiplayout.notification.NotificationContainer;
+import com.zhw.swiplayout.view.SwipeDirectionLayout;
 
 public class MainActivity extends Activity {
 
@@ -42,7 +46,27 @@ public class MainActivity extends Activity {
         if (mPopupWindow != null && mPopupWindow.isShowing()) {
             mPopupWindow.dismiss();
         }
-        View view = LayoutInflater.from(this).inflate(R.layout.view_notification, null, false);
+        final View view = LayoutInflater.from(this).inflate(R.layout.view_notification, null, false);
+        SwipeDirectionLayout swipeDirectionLayout = view.findViewById(R.id.swipe_layout);
+        swipeDirectionLayout.setScrollListener(new SwipeDirectionLayout.ScrollListener() {
+            @Override
+            public void onScrollFinished() {
+                if (mPopupWindow == null) {
+                    return;
+                }
+                if (!mPopupWindow.isShowing()) {
+                    return;
+                }
+                if (isFinishing()) {
+                    return;
+                }
+                mPopupWindow.dismiss();
+                if (mPopupWindowRunnable != null) {
+                    view.removeCallbacks(mPopupWindowRunnable);
+                }
+                Log.d("PopupWindow", "ScrollListener~~");
+            }
+        });
         mPopupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setAnimationStyle(R.style.popwindow_anim);
         final View decorView = this.getWindow().getDecorView();
@@ -53,6 +77,7 @@ public class MainActivity extends Activity {
             }
         });
         autoDismissWindow(view);
+        Log.d("PopupWindow", "showNotification~~");
     }
 
 
@@ -61,7 +86,7 @@ public class MainActivity extends Activity {
             decorView.removeCallbacks(mPopupWindowRunnable);
         }
         mPopupWindowRunnable = new PopupWindowRunnable();
-        decorView.postDelayed(mPopupWindowRunnable, 6 * 1000);
+        decorView.postDelayed(mPopupWindowRunnable, 8 * 1000);
     }
 
     private PopupWindowRunnable mPopupWindowRunnable;
@@ -87,9 +112,8 @@ public class MainActivity extends Activity {
                     return;
                 }
             }
-
             mPopupWindow.dismiss();
-
+            Log.d("PopupWindowRunnable", "dismiss");
         }
     }
 

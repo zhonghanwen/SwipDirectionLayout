@@ -6,6 +6,7 @@
     android:layout_height="wrap_content">
 
     <com.zhw.swiplayout.view.SwipeDirectionLayout
+        android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints">
