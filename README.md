@@ -2,6 +2,7 @@
 this is a support left,right,top direction swip layout.
 
 # Screenshot
+![](https://github.com/zhonghanwen/SwipDirectionLayout/blob/master/app/screenshot/screenshot.gif)
 
 # License
 
